@@ -152,7 +152,7 @@ The ER Diagram illustrates the relationships among all database tables.
 - One Product → Many Production Records
 - One Product → Many Sales Details
 
-*`ER Diagram.png`*
+<img width="984" height="891" alt="ER Diagram" src="https://github.com/user-attachments/assets/e0781c4b-b5f4-4f6d-bffd-8bb92ed7f291" />
 
 
 ## Dashboard Features
@@ -222,7 +222,7 @@ ERP-CDP-System
 │   ├── salesdetails.csv
 │   └── production.csv
 │
-└── ER Diagram(1).png
+└── ER Diagram.png
 ```
 
 ## Future Enhancements
