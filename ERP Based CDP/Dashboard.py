@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
-import mysql.connector
 import plotly.express as px
+from sqlalchemy import create_engine
+from sqlalchemy.engine import URL
 
 # DATABASE CONNECTION -- edit these to match your local setup
 DB_CONFIG = {
@@ -13,15 +14,26 @@ DB_CONFIG = {
 
 st.set_page_config(page_title="ERP Console", layout="wide")
 
+
 @st.cache_resource
 def get_connection():
-    return mysql.connector.connect(**DB_CONFIG)
+    connection_url = URL.create(
+        drivername="mysql+pymysql",
+        username=DB_CONFIG["user"],
+        password=DB_CONFIG["password"],
+        host=DB_CONFIG["host"],
+        database=DB_CONFIG["database"],
+    )
 
+    return create_engine(connection_url)
+
+
+@st.cache_data(ttl=300)
 def run_query(sql):
-    conn = get_connection()
+    engine = get_connection()
     try:
-        return pd.read_sql(sql, conn)
-    except mysql.connector.Error as e:
+        return pd.read_sql(sql, engine)
+    except Exception as e:
         st.error(f"Database error: {e}")
         return pd.DataFrame()
 
@@ -31,6 +43,7 @@ st.title("ERP / CDP Dashboard")
 st.caption("erp_cdp_system — live view")
 
 if st.button("Refresh data"):
+    st.cache_data.clear()
     st.cache_resource.clear()
     st.rerun()
 
@@ -66,7 +79,7 @@ with col1:
     st.subheader("Revenue Trend (monthly)")
     trend_df = run_query(
         """
-        SELECT DATE_FORMAT(orderDate, '%Y-%m') AS month,
+        SELECT DATE_FORMAT(orderDate, '%%Y-%%m') AS month,
                SUM(totalAmount) AS revenue,
                COUNT(*) AS orders
         FROM salesOrder
