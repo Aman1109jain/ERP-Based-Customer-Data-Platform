@@ -1,7 +1,0 @@
-streamlit
-pandas
-plotly
-sqlalchemy
-numpy
-mysql-connector-python
-faker
