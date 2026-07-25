@@ -1,4 +1,7 @@
 streamlit
-mysql-connector-python
 pandas
 plotly
+sqlalchemy
+numpy
+mysql-connector-python
+faker
